@@ -48,7 +48,7 @@ def systemcmd(cmd):
     cmd += " >&2" # redirect verbose output to stderr
     print_verbose("Exec: %s" % cmd)
     if os.system(cmd):
-        raise AppError, "failed command: %s" % cmd
+        raise AppError("failed command: %s" % cmd)
 
 
 #
@@ -94,7 +94,7 @@ class Application():
         outfile = os.path.abspath(self.options.outfile)
         outdir = os.path.dirname(outfile)
         if not os.path.isdir(outdir):
-            raise AppError, 'directory does not exist: %s' % outdir
+            raise AppError('directory does not exist: %s' % outdir)
         temp = None
         try:
             if self.infile == '-':
@@ -102,6 +102,8 @@ class Application():
                 temp = tempfile.NamedTemporaryFile(delete=False)
                 infile = temp.name
                 print_verbose("Temporary input file is %s" % infile)
+                if isinstance(source,str):
+                    source = bytes(source, "utf8")
                 temp.write(source)
                 temp.close()
             else:
@@ -141,6 +143,6 @@ if __name__ == "__main__":
         app.run()
     except KeyboardInterrupt:
         sys.exit("Ouch!")
-    except Exception, e:
+    except Exception as e:
         sys.exit("%s: %s\n" % (os.path.basename(sys.argv[0]), e))
 
