@@ -99,13 +99,10 @@ class Application():
         try:
             if self.infile == '-':
                 source = sys.stdin.read()
-                temp = tempfile.NamedTemporaryFile(delete=False)
-                infile = temp.name
-                print_verbose("Temporary input file is %s" % infile)
-                if sys.version_info.major > 2:
-                    source = bytes(source, "utf8")
-                temp.write(source)
-                temp.close()
+                with tempfile.NamedTemporaryFile(mode='w', delete=False) as temp:
+                    infile = temp.name
+                    print_verbose("Temporary input file is %s" % infile)
+                    temp.write(source)
             else:
                 infile = self.infile
             options = "--overwrite" # Always set
