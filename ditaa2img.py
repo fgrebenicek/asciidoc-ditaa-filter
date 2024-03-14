@@ -102,7 +102,7 @@ class Application():
                 temp = tempfile.NamedTemporaryFile(delete=False)
                 infile = temp.name
                 print_verbose("Temporary input file is %s" % infile)
-                if isinstance(source,str):
+                if sys.version_info.major > 2:
                     source = bytes(source, "utf8")
                 temp.write(source)
                 temp.close()
